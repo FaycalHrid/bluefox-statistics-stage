@@ -1,0 +1,58 @@
+<div class="card">
+    <div class="card-header">
+        Upload file
+    </div>
+    <div class="card-body">
+        <form #uploadFileForm=ngForm>
+
+            <div class="alert alert-success" [hidden]="!msg">
+                {{msg}}
+            </div>
+            <div class="alert alert-danger" [hidden]="!error">
+                {{error}}
+            </div>
+            <div class="form-row">
+                <!--
+                <fieldset class="form-group col-md-2">
+                    <label for="site" class="offset-4 col-md-10">Site</label>
+                    <select class="form-control col-md-12" name="site" id="site" [(ngModel)]="site" required>
+                        <option *ngFor="let site of sites" [value]="site.label">
+                            {{ site.title }}
+                        </option>
+                    </select>
+                    <div class="invalid-feedback">Site is required.</div>
+                </fieldset>
+                -->
+                <fieldset class="form-group col-md-8">
+                    <label for="file" class="offset-6 col-sm-10 col-md-10">File browser</label>
+                    <div class="form-group row col-sm-12">
+                        <div class="custom-file col-sm-10 col-md-10">
+                            <input type="file" class="custom-file-input" id="file"
+                                   (change)="handleFileInput($event.target.files)" required>
+                            <div class="invalid-feedback">File is required.</div>
+                            <label class="custom-file-label" for="file">
+                                <div *ngIf="fileToUpload; elseBlock"> {{fileToUpload.name}}</div>
+                                <ng-template #elseBlock>Choose file</ng-template>
+                            </label>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary" [disabled]="!uploadFileForm.valid"
+                                    [swal]="['Warning!', 'Are you sure you want to deliver this list', 'warning']"
+                                    (confirm)="uploadFileToActivity(fileToUpload)"
+                                    (cancel)="handleRefusalToSubmit($event)">
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </form>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12" *ngIf="loader">
+        <div class="card loader-data">
+            <div class="card-body">
+                <div class="loader05"></div>
+            </div>
+        </div>
+    </div>
+</div>

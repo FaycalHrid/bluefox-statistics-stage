@@ -1,0 +1,207 @@
+<div class="card">
+    <div class="card-header">
+        List of invoices
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form #InvoiceForm=ngForm>
+                            <div class="col-lg-12">
+                                <p class="alert alert-danger" [hidden]="!error">
+                                    {{error}}
+                                </p>
+                            </div>
+                            <div class="form-row">
+                                <fieldset class="form-group col-md-4">
+                                    <label for="startDate" class="form-control-label offset-4 col-md-8">
+                                        From
+                                    </label>
+                                    <input type="date" name="from" class="form-control col-md-12" id="startDate"
+                                           placeholder="From" [(ngModel)]="form.from" required/>
+                                    <div class="invalid-feedback">Start date is required.</div>
+                                </fieldset>
+                                <fieldset class="form-group col-md-4">
+                                    <label for="endDate" class="form-control-label offset-4 col-md-8">
+                                        To
+                                    </label>
+                                    <input type="date" name="to" class="form-control col-md-12" id="endDate"
+                                           [(ngModel)]="form.to" required/>
+                                    <div class="invalid-feedback">End date is required.</div>
+                                </fieldset>
+                                <fieldset class="form-group col-md-4">
+                                    <label for="startDate" class="form-control-label offset-4 col-md-8">
+                                        Email address
+                                    </label>
+                                    <input type="email" name="email" class="form-control col-md-12" id="email"
+                                           placeholder="Email" [(ngModel)]="form.email"/>
+                                </fieldset>
+                            </div>
+                            <div class="form-row">
+                                <fieldset class="form-group col-md-4">
+                                    <label for="chain" class="form-control-label offset-4 col-md-8">
+                                        Chain
+                                    </label>
+                                    <select class="form-control col-md-12" name="chain" id="chain" [(ngModel)]="form.chain">
+                                        <option value="allChains" selected >All chains</option>
+                                        <option *ngFor="let chain of chains" [value]="chain.label">
+                                            {{ chain.description }}
+                                        </option>
+                                    </select>
+                                </fieldset>
+                                <fieldset class="form-group col-md-4">
+                                    <label for="status" class="form-control-label offset-4 col-md-8">
+                                        Status
+                                    </label>
+                                    <select class="form-control col-md-12" name="status" id="status" [(ngModel)]="form.status" >
+                                        <option value="3" selected >All status</option>
+                                        <option value="0">Waiting</option>
+                                        <option value="1">Submited</option>
+                                        <option value="2">Delivered</option>
+                                    </select>
+                                </fieldset>
+                                <!--
+                                <fieldset class="form-group col-md-4">
+
+                                    <label for="status" class="form-control-label offset-4 col-md-8">
+                                        Site
+                                    </label>
+                                    <select class="form-control col-md-12" name="site" id="site" [(ngModel)]="form.site" required >
+                                        <option *ngFor="let site of sites" [value]="site.label">
+                                            {{ site.title }}
+                                        </option>
+                                    </select>
+                                    <div class="invalid-feedback">Site is required.</div>
+                                </fieldset>
+                                -->
+                            </div>
+                            <div class="form-row">
+                                <fieldset class="form-group col-md-12">
+                                    <button class="btn btn-primary form-control-label offset-10 col-md-2" (click)="loadInvoiceByFilter(form)"
+                                            [disabled]="!InvoiceForm.valid">Filter
+                                    </button>
+                                </fieldset>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped mb-0">
+                <thead>
+                <tr (click)="toggleAll(isCollapsed)">
+                    <th>
+                        <p>
+                            <i *ngIf="!isCollapsed" class="icon icon-arrows-circle-plus"></i>
+                            <i *ngIf="isCollapsed" class="icon icon-arrows-circle-minus"></i>
+                        </p>
+                    </th>
+                    <th><p class="customer-id">Customer ID</p></th>
+                    <th><p>Order ID</p></th>
+                    <th><p>Date</p></th>
+                    <th><p>Gender</p></th>
+                    <th><p class="first-name">First Name</p></th>
+                    <th><p class="first-name">Last Name</p></th>
+                    <th><p>Phone</p></th>
+                    <th><p>Address</p></th>
+                    <th><p>Province /State</p></th>
+                    <th><p>City</p></th>
+                    <th><p>Disctrict</p></th>
+                    <th><p>ZipCode</p></th>
+                    <th><p>Email address</p></th>
+                    <th><p class="special-note">Special Note</p></th>
+                    <th><p>Chain</p></th>
+                    <th><p class="product">Product Name & ID</p></th>
+                    <th><p class="product">Product Quantity</p></th>
+                    <th><p class="product">Price Per Product</p></th>
+                    <th><p class="product">Subtotal Product</p></th>
+                    <th><p class="product">Shipping Price</p></th>
+                    <th><p class="first-name">Total Amount</p></th>
+                    <th><p class="product">Date Order is Sent</p></th>
+                    <th><p>Status</p></th>
+                    <th><p>Action</p></th>
+                </tr>
+                </thead>
+                <tbody *ngFor="let invoice of invoices">
+                <tr [ngClass]="{
+                    'bg-primary':invoice.deliveryStatus == 0,
+                    'bg-warning':invoice.deliveryStatus == 1,
+                    'bg-success':invoice.deliveryStatus == 2
+                    }">
+                    <th (click)="toggle(invoice.refInterne)">
+                        <i *ngIf="!isToggle[invoice.refInterne]" class="icon icon-arrows-circle-plus"></i>
+                        <i *ngIf="isToggle[invoice.refInterne]" class="icon icon-arrows-circle-minus"></i>
+                    </th>
+                    <td>{{ invoice.userId }}</td>
+                    <td>{{ invoice.refInterne }}</td>
+                    <td>{{ invoice.modificationDate }}</td>
+                    <td>
+                        <span *ngIf="invoice.civility!=2">Male</span>
+                        <span *ngIf="invoice.civility==2">Female</span>
+                    </td>
+                    <td>{{ invoice.firstName }}</td>
+                    <td>{{ invoice.lastName }}</td>
+                    <td>{{ invoice.phone }}</td>
+                    <td>{{ invoice.addressInvoice }}</td>
+                    <td>{{ invoice.province }}</td>
+                    <td>{{ invoice.city }}</td>
+                    <td>{{ invoice.district }}</td>
+                    <td>{{ invoice.zipCode }}</td>
+                    <td>{{ invoice.emailUser }}</td>
+                    <td>{{ invoice.commentary }}</td>
+                    <td>{{ invoice.chainDescription }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>39000.00</td>
+                    <td>{{ invoice.totalAmount }}</td>
+                    <td>{{ invoice.deliveryDate }}</td>
+                    <td>
+                        <span *ngIf="invoice.deliveryStatus == 0" class="badge badge-primary">Waiting</span>
+                        <span *ngIf="invoice.deliveryStatus == 1" class="badge badge-warning">Submitted</span>
+                        <span *ngIf="invoice.deliveryStatus == 2" class="badge badge-success">Delivred</span>
+                    </td>
+                    <td>
+                        <button *ngIf="invoice.deliveryStatus == 0" type="button" class="btn btn-warning btn-sm"
+                            [swal]="['Warning!', 'Are you sure you want to submit this invoice', 'warning']"
+                            (confirm)="submitInvoice(invoice.idInvoice, invoice)"
+                            (cancel)="handleRefusalToSubmit($event)">
+                            <span class="glyphicon glyphicon-ban-circle"></span>
+                            Submit
+                        </button>
+                    </td>
+                </tr>
+                <tr  *ngFor="let record of invoice.product">
+                    <td *ngIf="isToggle[invoice.refInterne]" colspan="16"></td>
+                    <td *ngIf="isToggle[invoice.refInterne]">
+                        <ul class="width-product">
+                            <li><strong>Product  name in english</strong> : {{ record.productDescription }}</li>
+                            <li><strong>Product name</strong> :  {{ record.descriptionPP }}</li>
+                            <li><strong>Product mercury ID</strong> : {{ record.nbMercury }}</li>
+                        </ul>
+                    </td>
+                    <td *ngIf="isToggle[invoice.refInterne]">{{ record.qty }}</td>
+                    <td *ngIf="isToggle[invoice.refInterne]">{{ record.priceATI }}</td>
+                    <td *ngIf="isToggle[invoice.refInterne]">{{ record.qty * record.priceATI }}</td>
+                    <td *ngIf="isToggle[invoice.refInterne]" colspan="5"></td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <div class="col-xs-12 col-sm-12 col-md-12" *ngIf="loader">
+                <div class="card loader-data">
+                    <div class="card-body">
+                        <div class="loader05"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
